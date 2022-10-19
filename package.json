@@ -1,0 +1,37 @@
+{
+  "name": "blog-list",
+  "version": "1.0.0",
+  "description": "Full Stack open 2022 part 4 exercises.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tar83/blog-list.git"
+  },
+  "keywords": [],
+  "author": "tar83",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tar83/blog-list/issues"
+  },
+  "homepage": "https://github.com/tar83/blog-list#readme",
+  "devDependencies": {
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.6.5"
+  }
+}
