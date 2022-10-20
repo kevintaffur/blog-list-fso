@@ -118,8 +118,26 @@ describe('deletion of a blog post', () => {
   });
 });
 
-describe('update likes count of a blog post', () => {
+describe('updating information of a blog post', () => {
+  test('update likes count', async () => {
+    const blogs = await helper.blogsInDB();
+    const blogToUpdate = blogs[0];
 
+    const updatedBlog = {
+      ...blogToUpdate,
+      likes: 5,
+    };
+
+    await api
+      .put(`/api/blogs/${updatedBlog.id}`)
+      .send(updatedBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsUpdated = await helper.blogsInDB();
+    const updatedInfo = blogsUpdated[0];
+    expect(updatedInfo.likes).toBe(5);
+  });
 });
 
 afterAll(() => {
