@@ -37,8 +37,26 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   const { id } = request.params;
+  const { token } = request;
+
+  const decodedToken = jwt.verify(token, config.SECRET);
+
+  const blog = await Blog.findById(id);
+
+  if (!blog) {
+    return response.status(404).json({
+      error: 'Blog not found',
+    });
+  }
+
+  if (blog.user.toString() !== decodedToken.id.toString()) {
+    return response.status(400).json({
+      error: 'This blog belongs to another user',
+    });
+  }
+
   await Blog.findByIdAndRemove(id);
-  response.status(204).end();
+  return response.status(204).end();
 });
 
 blogsRouter.put('/:id', async (request, response) => {
