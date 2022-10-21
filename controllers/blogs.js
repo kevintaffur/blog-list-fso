@@ -1,8 +1,5 @@
 const blogsRouter = require('express').Router();
-const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
-const User = require('../models/user');
-const config = require('../utils/config');
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
@@ -16,11 +13,9 @@ blogsRouter.post('/', async (request, response) => {
     url,
     likes,
   } = request.body;
-  const { token } = request;
 
-  const decodedToken = jwt.verify(token, config.SECRET);
-
-  const user = await User.findById(decodedToken.id);
+  const { user } = request;
+  console.log(user);
 
   const blog = new Blog({
     title,
@@ -37,9 +32,7 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   const { id } = request.params;
-  const { token } = request;
-
-  const decodedToken = jwt.verify(token, config.SECRET);
+  const { user } = request;
 
   const blog = await Blog.findById(id);
 
@@ -49,7 +42,7 @@ blogsRouter.delete('/:id', async (request, response) => {
     });
   }
 
-  if (blog.user.toString() !== decodedToken.id.toString()) {
+  if (blog.user.toString() !== user.id.toString()) {
     return response.status(400).json({
       error: 'This blog belongs to another user',
     });
