@@ -44,4 +44,29 @@ const blogsInDB = async () => {
   return allBlogs.map((blog) => blog.toJSON());
 };
 
-module.exports = { blogs, blogsInDB };
+const login = async (api) => {
+  const newUser = {
+    username: 'testusername',
+    password: 'supersecurepassword',
+    name: 'Test',
+  };
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const loggedUser = await api
+    .post('/api/login')
+    .send({
+      username: 'testusername',
+      password: 'supersecurepassword',
+    })
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  return loggedUser;
+};
+
+module.exports = { blogs, blogsInDB, login };
