@@ -1,18 +1,13 @@
-const blogsRouter = require('express').Router();
-const Blog = require('../models/blog');
+const blogsRouter = require("express").Router();
+const Blog = require("../models/blog");
 
-blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
+blogsRouter.get("/", async (request, response) => {
+  const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
   response.json(blogs);
 });
 
-blogsRouter.post('/', async (request, response) => {
-  const {
-    title,
-    author,
-    url,
-    likes,
-  } = request.body;
+blogsRouter.post("/", async (request, response) => {
+  const { title, author, url, likes } = request.body;
 
   const { user } = request;
 
@@ -29,7 +24,7 @@ blogsRouter.post('/', async (request, response) => {
   return response.status(201).json(savedBlog);
 });
 
-blogsRouter.delete('/:id', async (request, response) => {
+blogsRouter.delete("/:id", async (request, response) => {
   const { id } = request.params;
   const { user } = request;
 
@@ -37,13 +32,13 @@ blogsRouter.delete('/:id', async (request, response) => {
 
   if (!blog) {
     return response.status(404).json({
-      error: 'Blog not found',
+      error: "Blog not found",
     });
   }
 
   if (blog.user.toString() !== user.id.toString()) {
     return response.status(400).json({
-      error: 'This blog belongs to another user',
+      error: "This blog belongs to another user",
     });
   }
 
@@ -51,7 +46,7 @@ blogsRouter.delete('/:id', async (request, response) => {
   return response.status(204).end();
 });
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put("/:id", async (request, response) => {
   const { id } = request.params;
 
   const newBlog = {
@@ -62,8 +57,16 @@ blogsRouter.put('/:id', async (request, response) => {
     user: request.body.user.id,
   };
 
-  const updatedBlog = await Blog.findByIdAndUpdate(id, newBlog, { new: true, runValidators: true, content: 'query' });
-  response.json(updatedBlog);
+  const updatedBlog = await Blog.findByIdAndUpdate(id, newBlog, {
+    new: true,
+    runValidators: true,
+    content: "query",
+  });
+  const populatedBlog = await Blog.findById(updatedBlog.id).populate("user", {
+    username: 1,
+    name: 1,
+  });
+  response.json(populatedBlog);
 });
 
 module.exports = blogsRouter;
